@@ -34,6 +34,24 @@
 
            ./threads 100000
 
+    7) Modify the program so that it determines how many threads to create
+       and how many loops each thread runs from command line arguments.
+       For example
+
+           ./threads 100000 100000
+
+       creates two threads and each thread loops 100000 times.  On the other
+       hand
+
+           ./threads 42 420 4200
+
+       creates three threads.  The first thread loops 42 times, the second
+       420 times, and the third 4200 times.
+
+       To accomplish this, read the man page for pthread_create(3).  The loop
+       count should be passed to start_routine via arg.  Doing so will require
+       type casts.
+
 */
 
 volatile int counter = 0; 

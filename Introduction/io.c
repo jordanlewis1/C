@@ -5,6 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <string.h>
+#include <stdlib.h>
 
 /*
 
@@ -15,7 +16,8 @@
 
         gcc -g -Wall -o io io.c
 
-    Run the program.  The assert below will fail.  Use gdb to investigate.
+    Run the program.  The first assert below will fail.  Use gdb to
+    investigate.
 
     1) What is the value of the global variable errno at the point of the
        assertion failure?  Using a search engine, what is the meaning of
@@ -28,6 +30,10 @@
     3) Using the man page for open(2), explain the meaning of the second
        and third parameters to the open call.
 
+    4) Using the malloc(3) man page, explain what malloc does.  How would you
+       change the declaration of buffer so that malloc was no longer needed?
+       Your answers should distinguish run-time from compile-time.
+
 */
 
 int main(int argc, char *argv[]) {
@@ -35,10 +41,12 @@ int main(int argc, char *argv[]) {
                   O_WRONLY | O_CREAT | O_TRUNC,
                   S_IRUSR | S_IWUSR);
     assert(fd >= 0);
-    char buffer[20];
+    char *buffer;
+    assert((buffer = malloc(20 * sizeof(char))) != NULL);
     sprintf(buffer, "hello world\n");
     int rc = write(fd, buffer, strlen(buffer));
     assert(rc == (strlen(buffer)));
+    free(buffer);
     fsync(fd);
     close(fd);
     return 0;
