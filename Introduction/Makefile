@@ -4,19 +4,13 @@
 CC = gcc
 CFLAGS += -g -Wall
 
-all: mem threads io fs
+all: io threads
 
 clean:
-	rm -f mem threads io fs file
-
-mem: mem.c
-	$(CC) $(CFLAGS) -o mem mem.c
-
-threads: threads.c
-	$(CC) $(CFLAGS) -o threads threads.c -pthread
+	rm -f io threads file
 
 io: io.c
 	$(CC) $(CFLAGS) -o io io.c
 
-fs: fs.c
-	$(CC) $(CFLAGS) -o fs fs.c
+threads: threads.c
+	$(CC) $(CFLAGS) -o threads threads.c -pthread
