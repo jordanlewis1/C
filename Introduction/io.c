@@ -25,7 +25,7 @@
 
     2) Using the getcwd(3) man page, modify the program so that the file
        (named 'file') that it creates is created in the running process'
-       current working directory.
+       current working directory.  You will also need to use strcat(3).
 
     3) Using the man page for open(2), explain the meaning of the second
        and third parameters to the open call.

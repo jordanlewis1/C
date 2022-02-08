@@ -50,7 +50,11 @@
 
        To accomplish this, read the man page for pthread_create(3).  The loop
        count should be passed to start_routine via arg.  Doing so will require
-       type casts.
+       type casts from long to void * and back.
+
+       You may assume that no more than 10 loop counts are passed on the
+       command line.  If more than 10 loop counts are passed, print an error
+       message to stderr and exit with a status of 1.
 
 */
 
