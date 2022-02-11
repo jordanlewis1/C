@@ -33,15 +33,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 // "..." tells include to look in the current working directory
-//#include "more.h"
+#include "more.h"
 
 // Function prototype
-//int hello(char *, int);
+int hello(char *, int);
 
 int main(int argc, char *argv[]) {
     long fave = FAVE;
-    printf("Favorite number is %d\n", fave);
-//    func(fave);
+    printf("Favorite number is %ld\n", fave);
+    func(fave);
     return hello(argv[1], atoi(argv[2]));
 }
 

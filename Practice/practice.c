@@ -8,6 +8,9 @@
 #include <string.h>
 #include <stdlib.h>
 
+void printSum();
+int sumToN(int);
+
 int main(int argc, char *argv[]) {
     printSum();
     return 0;
@@ -15,21 +18,21 @@ int main(int argc, char *argv[]) {
 
 void printSum() {
     char line[10];
-    char *buf = NULL;
+    char buf[80];
     int n;
     printf("Enter a number:\n");
     fgets(line, 10, stdin);
     if (line != NULL) 
         strtok(line, "\n");
     n = atoi(line);
-    sprintf(buf, "The sum from 1 to %d is %d.", n, sumToN(n));
+    sprintf(buf, "The sum of 1 and %d is %d.", n, sumToN(n));
     printf("%s\n", buf);
 }
 
 int sumToN(int num) {
     int i;
     int sum = 0;
-    for (i = 1; i < num; i++)
-        sum = i;
+    for (i = 1; i <= num; i++)
+        sum = sum + i;
     return sum;
 }

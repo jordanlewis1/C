@@ -37,11 +37,16 @@
 */
 
 int main(int argc, char *argv[]) {
-    int fd = open("/root/file",
+	char path[80];
+	getcwd(path, 80-6);
+	strcat(path, "/file");
+    int fd = open(path,
                   O_WRONLY | O_CREAT | O_TRUNC,
                   S_IRUSR | S_IWUSR);
     assert(fd >= 0);
     char *buffer;
+    //char S[256] = "Tom";
+    //strcat(s,  "42")
     assert((buffer = malloc(20 * sizeof(char))) != NULL);
     sprintf(buffer, "hello world\n");
     int rc = write(fd, buffer, strlen(buffer));
