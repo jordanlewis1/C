@@ -11,7 +11,7 @@
 
     To compile:
 
-        gcc -g -Wall -o threads threads -pthread
+        gcc -g -Wall -o threads threads.c -pthread
 
     1) What is the purpose of the -pthread argument here?  Why is it
        necessary? 
@@ -62,6 +62,7 @@ volatile int counter = 0;
 int loops;
 
 void *worker(void *arg) {
+    int loops = (long) arg;
     int i;
     for (i = 0; i < loops; i++) {
         counter++;
@@ -70,14 +71,14 @@ void *worker(void *arg) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) { 
+    if (argc > 10) { 
         fprintf(stderr, "usage: ./threads <loops>\n"); 
         exit(1); 
     } 
     loops = atoi(argv[1]);
     pthread_t p1, p2;
     printf("Initial value : %d\n", counter);
-    assert(pthread_create(&p1, NULL, worker, NULL) == 0);
+    assert(pthread_create(&p1, NULL, worker, (void *) (long) atoi(argv[1])) == 0);
     assert(pthread_create(&p2, NULL, worker, NULL) == 0);
     assert(pthread_join(p1, NULL) == 0);
     assert(pthread_join(p2, NULL) == 0);

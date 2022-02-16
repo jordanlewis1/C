@@ -29,10 +29,14 @@
 
     3) Using the man page for open(2), explain the meaning of the second
        and third parameters to the open call.
+       * for the second parameter (O_creat) this creates file if there is not already one
+       * * for the third parameter (O_trunc) if there is a regular file then it gets set to lenth 0.  So it deletes the previos info already stored and re-runs the program.
 
     4) Using the malloc(3) man page, explain what malloc does.  How would you
        change the declaration of buffer so that malloc was no longer needed?
        Your answers should distinguish run-time from compile-time.
+       * The malloc function allocates the size of pointers.  Malloc also checks if the memory size is 0 as well.  Malloc uses run-time because it essentially is able to allocate memory on its own without hard coding.
+       
 
 */
 
