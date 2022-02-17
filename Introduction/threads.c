@@ -15,24 +15,31 @@
 
     1) What is the purpose of the -pthread argument here?  Why is it
        necessary? 
+       -pthreads purpose is to connect the binary program with a library that allows pthread_create to be used.
 
     2) What code does each thread run?
+    
 
     3) How many total threads will be running immediately after the second
        pthread_create call has completed?
+       three
 
     4) Explain what pthread_join does.
+    This waits for the thread to be terminated.  If so it returns.
 
     5) If the program is run thusly:
 
            ./threads 42
 
        What should the output be?  Is the correct output produced?
+       The output should be 82 because you are hard coding the threads.
 
     6) Explain what happens, and why it happens, when the program is run
        thusly:
 
            ./threads 100000
+           
+           The thread is taking too long and the Cpu gives it to the other thread
 
     7) Modify the program so that it determines how many threads to create
        and how many loops each thread runs from command line arguments.
@@ -62,26 +69,46 @@ volatile int counter = 0;
 int loops;
 
 void *worker(void *arg) {
-    int loops = (long) arg;
+    //int loops = (long) arg;
     int i;
+    
     for (i = 0; i < loops; i++) {
+        
         counter++;
     }
+    //printf("Num %d", counter);
     return NULL;
 }
 
-int main(int argc, char *argv[]) {
-    if (argc > 10) { 
-        fprintf(stderr, "usage: ./threads <loops>\n"); 
-        exit(1); 
-    } 
-    loops = atoi(argv[1]);
-    pthread_t p1, p2;
+int main(int argc, char *argv[]) {  
+    //if (argc != 2) { 
+        //fprintf(stderr, "usage: ./threads <loops>\n"); 
+        //exit(1);
+      //} 
+    int i;
+    counter = 0;     
+    //loops = atoi(argv[i]);
+    //for (i = 1; i < argc; i++) {
+    pthread_t thread[10];
     printf("Initial value : %d\n", counter);
-    assert(pthread_create(&p1, NULL, worker, (void *) (long) atoi(argv[1])) == 0);
-    assert(pthread_create(&p2, NULL, worker, NULL) == 0);
-    assert(pthread_join(p1, NULL) == 0);
-    assert(pthread_join(p2, NULL) == 0);
+   
+    for (i = 1; i < argc; i++) {
+        if (1 < argc) {
+       //printf("HIT");
+        //assert(pthread_create(&thread[i], NULL, worker, (void *) (long) atoi(argv[1])) == 0);
+        loops = atoi(argv[i]);
+        assert(pthread_create(&thread[i], NULL, worker, NULL) == 0);
+        assert(pthread_join(thread[i], NULL) == 0);
+        //fprintf(stderr, "Error");
+        //exit(1);    
+        }
+        }
+            
+    //printf("Initial value : %d\n", counter);
+    //assert(pthread_create(&p1, NULL, worker, (void *) (long) atoi(argv[1])) == 0);
+    //assert(pthread_create(&p2, NULL, worker, (void *) (long) atoi(argv[1])) == 0);   
+    //assert(pthread_join(th[i], NULL) == 0);
+    //assert(pthread_join(p2, NULL) == 0);
     printf("Final value   : %d\n", counter);
     return 0;
 }
