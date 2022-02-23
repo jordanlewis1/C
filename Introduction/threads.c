@@ -70,7 +70,7 @@ volatile int counter = 0;
 //int loops;
 
 void *worker(void *arg) {
-    // This is needed.
+    // This is needed.  -2
     int loops = (long) arg;
     int i;
     
@@ -78,13 +78,12 @@ void *worker(void *arg) {
         
         counter++;
     }
-    //printf("Num %d", counter);
     return NULL;
 }
 
 int main(int argc, char *argv[]) {  
     // Remove unused code; don't just comment it out.
-    // You should validate argc's value.  It should be between 2 and 11.
+    // You should validate argc's value.  It should be between 2 and 11.  -2
     int i;
     counter = 0;     
     pthread_t thread[10];
@@ -92,12 +91,12 @@ int main(int argc, char *argv[]) {
    
     for (i = 1; i < argc; i++) {
         // Why is this if here?
-        // This is needed.
-        // You have an off by 1 error.
+        // This is needed.  -2
+        // You have an off by 1 error.  -1
         assert(pthread_create(&thread[i-1], NULL, worker, (void *) (long) atoi(argv[i])) == 0);
         // The calls to pthread_join have to be in a separate loop.
         // Otherwise, the threads will run consecutively rather than
-        // concurrently.
+        // concurrently.  -3
     }
 
     for (i = 0; i < argc-1; i++)
