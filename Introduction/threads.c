@@ -66,10 +66,12 @@
 */
 
 volatile int counter = 0; 
-int loops;
+// This is no longer needed.
+//int loops;
 
 void *worker(void *arg) {
-    //int loops = (long) arg;
+    // This is needed.
+    int loops = (long) arg;
     int i;
     
     for (i = 0; i < loops; i++) {
@@ -81,34 +83,26 @@ void *worker(void *arg) {
 }
 
 int main(int argc, char *argv[]) {  
-    //if (argc != 2) { 
-        //fprintf(stderr, "usage: ./threads <loops>\n"); 
-        //exit(1);
-      //} 
+    // Remove unused code; don't just comment it out.
+    // You should validate argc's value.  It should be between 2 and 11.
     int i;
     counter = 0;     
-    //loops = atoi(argv[i]);
-    //for (i = 1; i < argc; i++) {
     pthread_t thread[10];
     printf("Initial value : %d\n", counter);
    
     for (i = 1; i < argc; i++) {
-        if (1 < argc) {
-       //printf("HIT");
-        //assert(pthread_create(&thread[i], NULL, worker, (void *) (long) atoi(argv[1])) == 0);
-        loops = atoi(argv[i]);
-        assert(pthread_create(&thread[i], NULL, worker, NULL) == 0);
+        // Why is this if here?
+        // This is needed.
+        // You have an off by 1 error.
+        assert(pthread_create(&thread[i-1], NULL, worker, (void *) (long) atoi(argv[i])) == 0);
+        // The calls to pthread_join have to be in a separate loop.
+        // Otherwise, the threads will run consecutively rather than
+        // concurrently.
+    }
+
+    for (i = 0; i < argc-1; i++)
         assert(pthread_join(thread[i], NULL) == 0);
-        //fprintf(stderr, "Error");
-        //exit(1);    
-        }
-        }
             
-    //printf("Initial value : %d\n", counter);
-    //assert(pthread_create(&p1, NULL, worker, (void *) (long) atoi(argv[1])) == 0);
-    //assert(pthread_create(&p2, NULL, worker, (void *) (long) atoi(argv[1])) == 0);   
-    //assert(pthread_join(th[i], NULL) == 0);
-    //assert(pthread_join(p2, NULL) == 0);
     printf("Final value   : %d\n", counter);
     return 0;
 }
