@@ -28,24 +28,24 @@ shell, by reading the man pages or other online materials.
 
 ## Program Specifications
 
-### Basic Shell: `wish`
+### Basic Shell: `gosh`
 
-Your basic shell, called `wish` (short for Wisconsin Shell, naturally), is
-basically an interactive loop: it repeatedly prints a prompt `wish> ` (note
+Your basic shell, called `gosh` (short for Goucher Shell), is
+basically an interactive loop: it repeatedly prints a prompt `gosh> ` (note
 the space after the greater-than sign), parses the input, executes the command
 specified on that line of input, and waits for the command to finish. This is
 repeated until the user types `exit`.  The name of your final executable
-should be `wish`.
+should be `gosh`.
 
 The shell can be invoked with either no arguments or a single argument;
 anything else is an error. Here is the no-argument way:
 
 ```
-prompt> ./wish
-wish> 
+prompt> ./gosh
+gosh> 
 ```
 
-At this point, `wish` is running, and ready to accept commands. Type away!
+At this point, `gosh` is running, and ready to accept commands. Type away!
 
 The mode above is called *interactive* mode, and allows the user to type
 commands directly. The shell also supports a *batch mode*, which instead reads
@@ -53,11 +53,11 @@ input from a batch file and executes commands from therein. Here is how you
 run the shell with a batch file named `batch.txt`:
 
 ```
-prompt> ./wish batch.txt
+prompt> ./gosh batch.txt
 ```
 
 One difference between batch and interactive modes: in interactive mode, a
-prompt is printed (`wish> `). In batch mode, no prompt should be printed.
+prompt is printed (`gosh> `). In batch mode, no prompt should be printed.
 
 You should structure your shell such that it creates a process for each new
 command (the exception are *built-in commands*, discussed below).  Your basic
@@ -95,8 +95,8 @@ See the man pages for these functions, and also read the relevant [book
 chapter](http://www.ostep.org/cpu-api.pdf) for a brief overview.
 
 You will note that there are a variety of commands in the `exec` family; for
-this project, you must use `execv`. You should **not** use the `system()`
-library function call to run a command.  Remember that if `execv()` is
+this project, you should use `execvp`. You may **not** use the `system()`
+library function call to run a command.  Remember that if `execvp()` is
 successful, it will not return; if it does return, there was an error (e.g.,
 the command does not exist). The most challenging part is getting the
 arguments correctly specified. 
@@ -116,13 +116,6 @@ the user types a command.
 commands (except built-ins). All it does is find those executables in one of
 the directories specified by `path` and create a new process to run them.
 
-To check if a particular file exists in a directory and is executable,
-consider the `access()` system call. For example, when the user types `ls`,
-and path is set to include both `/bin` and `/usr/bin`, try `access("/bin/ls",
-X_OK)`. If that fails, try "/usr/bin/ls". If that fails too, it is an error.
-
-Your initial shell path should contain one directory: `/bin`
-
 Note: Most shells allow you to specify a binary specifically without using a
 search path, using either **absolute paths** or **relative paths**. For
 example, a user could type the **absolute path** `/bin/ls` and execute the
@@ -137,26 +130,21 @@ Whenever your shell accepts a command, it should check whether the command is
 a **built-in command** or not. If it is, it should not be executed like other
 programs. Instead, your shell will invoke your implementation of the built-in
 command. For example, to implement the `exit` built-in command, you simply
-call `exit(0);` in your wish source code, which then will exit the shell.
+call `exit(0);` in your gosh source code, which then will exit the shell.
 
-In this project, you should implement `exit`, `cd`, and `path` as built-in
+In this project, you should implement `exit` and `cd` as built-in
 commands.
 
 * `exit`: When the user types `exit`, your shell should simply call the `exit`
   system call with 0 as a parameter. It is an error to pass any arguments to
   `exit`. 
 
-* `cd`: `cd` always take one argument (0 or >1 args should be signaled as an
+* `cd`: `cd` takes zero or one argument ( >1 args should be signaled as an
 error). To change directories, use the `chdir()` system call with the argument
-supplied by the user; if `chdir` fails, that is also an error.
-
-* `path`: The `path` command takes 0 or more arguments, with each argument
-  separated by whitespace from the others. A typical usage would be like this:
-  `wish> path /bin /usr/bin`, which would add `/bin` and `/usr/bin` to the
-  search path of the shell. If the user sets path to be empty, then the shell
-  should not be able to run any programs (except built-in commands). The
-  `path` command always overwrites the old path with the newly specified
-  path. 
+supplied by the user; if `chdir` fails, that is also an error.  If no argument
+is supplied, change to the user's home directory.  The user's home directory
+is stored in the `HOME` environment variable.  Use `getenv()` to access
+`HOME`. 
 
 ### Redirection
 
@@ -180,8 +168,7 @@ followed by the redirection symbol followed by a filename. Multiple
 redirection operators or multiple files to the right of the redirection sign
 are errors.
 
-Note: don't worry about redirection for built-in commands (e.g., we will
-not test what happens when you type `path /bin > file`).
+You may assume that the built-in commands won't be redirected.
 
 ### Parallel Commands
 
@@ -189,7 +176,7 @@ Your shell will also allow the user to launch parallel commands. This is
 accomplished with the ampersand operator as follows:
 
 ```
-wish> cmd1 & cmd2 args1 args2 & cmd3 args1
+gosh> cmd1 & cmd2 args1 args2 & cmd3 args1
 ```
 
 In this case, instead of running `cmd1` and then waiting for it to finish,
@@ -256,11 +243,3 @@ this code. Throw lots of different inputs at it and make sure the shell
 behaves well. Good code comes through testing; you must run many different
 tests to make sure things work as desired. Don't be gentle -- other users
 certainly won't be. 
-
-Finally, keep versions of your code. More advanced programmers will use a
-source control system such as git. Minimally, when you get a piece of
-functionality working, make a copy of your .c file (perhaps a subdirectory
-with a version number, such as v1, v2, etc.). By keeping older, working
-versions around, you can comfortably work on adding new functionality, safe in
-the knowledge you can always go back to an older, working version if need be.
-
