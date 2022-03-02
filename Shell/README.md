@@ -196,8 +196,8 @@ line).
 message whenever you encounter an error of any type:
 
 ```
-    char error_message[30] = "An error has occurred\n";
-    write(STDERR_FILENO, error_message, strlen(error_message)); 
+    const char error_message[] = "An error has occurred.\n";
+    fprintf(stderr, error_message);
 ```
 
 The error message should be printed to stderr (standard error), as shown
