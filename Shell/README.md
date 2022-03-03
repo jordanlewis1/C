@@ -34,8 +34,8 @@ Your basic shell, called `gosh` (short for Goucher Shell), is
 basically an interactive loop: it repeatedly prints a prompt `gosh> ` (note
 the space after the greater-than sign), parses the input, executes the command
 specified on that line of input, and waits for the command to finish. This is
-repeated until the user types `exit`.  The name of your final executable
-should be `gosh`.
+repeated until the user types `exit` or presses `ctrl-d`.  The name of your
+final executable should be `gosh`.
 
 The shell can be invoked with either no arguments or a single argument;
 anything else is an error. Here is the no-argument way:
@@ -74,7 +74,7 @@ more on this below).
 The shell is very simple (conceptually): it runs in a while loop, repeatedly
 asking for input to tell it what command to execute. It then executes that
 command. The loop continues indefinitely, until the user types the built-in
-command `exit`, at which point it exits. That's it!
+command `exit` or presses `ctrl-d`, at which point it exits. That's it!
 
 For reading lines of input, you should use `getline()`. This allows you to
 obtain arbitrarily long input lines with ease. Generally, the shell will be
@@ -90,15 +90,19 @@ In either mode, if you hit the end-of-file marker (EOF), you should call
 To parse the input line into constituent pieces, you might want to use
 `strsep()`. Read the man page (carefully) for more details.
 
-To execute commands, look into `fork()`, `exec()`, and `wait()/waitpid()`.
+To execute commands, look into `fork()`, `execvp()`, and `wait()/waitpid()`.
 See the man pages for these functions, and also read the relevant [book
 chapter](http://www.ostep.org/cpu-api.pdf) for a brief overview.
 
 You will note that there are a variety of commands in the `exec` family; for
-this project, you should use `execvp`. You may **not** use the `system()`
+this project, you should use `execvp()`. You may **not** use the `system()`
 library function call to run a command.  Remember that if `execvp()` is
-successful, it will not return; if it does return, there was an error (e.g.,
-the command does not exist). The most challenging part is getting the
+successful, it will not return and the child process will terminate naturally
+after the program run by `execvp()` terminates.
+If it does return, there was an error (e.g.,
+the command does not exist). If this happens, print the error message and
+terminate the child process.  If you don't do this, you'll have two copies
+of your gosh shell running.  The most challenging part is getting the
 arguments correctly specified. 
 
 ### Paths
