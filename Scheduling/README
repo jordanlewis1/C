@@ -1,0 +1,6 @@
+1. As Quantum length increases, response time increases as well.
+The equation would be Quantum Length * N - 1.  The -1 is necessary for job 0.
+2. We will set NUMQUEUES to 1 so that it only runs run queue at a time.
+3. We can use stay and I/O to have the job 0 stop before reaching 10ms so that -s allows it to stay in top priority. We can use jlist to tell our jobs to run and there runtime.  The command line below stops the job before hitting q 10
+./mlfq.py -S -i 1 -l 0,0,9:0,0,0 -q 10
+

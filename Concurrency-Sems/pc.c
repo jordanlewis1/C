@@ -53,8 +53,9 @@ void *producer(void *arg) {
     int i;
     for (i = 0; i < loops; i++) {
         // Swap the following sem_wait() calls.
-        sem_wait(&empty);
         sem_wait(&mutex);
+        sem_wait(&empty);
+        //sem_wait(&mutex);
         do_fill(i);
         sem_post(&mutex);
         sem_post(&full);
@@ -63,8 +64,9 @@ void *producer(void *arg) {
     // end case
     for (i = 0; i < consumers; i++) {
         // Swap the following sem_wait() calls.
-        sem_wait(&empty);
         sem_wait(&mutex);
+        sem_wait(&empty);
+        //sem_wait(&mutex);
         do_fill(-1);
         sem_post(&mutex);
         sem_post(&full);
@@ -77,8 +79,9 @@ void *consumer(void *arg) {
     int tmp = 0;
     while (tmp != -1) {
         // Swap the following sem_wait() calls.
-        sem_wait(&full);
         sem_wait(&mutex);
+        sem_wait(&full);
+        //sem_wait(&mutex);
         tmp = do_get();
         sem_post(&mutex);
         sem_post(&empty);
